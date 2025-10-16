@@ -1,10 +1,8 @@
-﻿using MiniBank.Models;
-using MiniBank.Interfaces;
+﻿using MiniBank.Interfaces;
+using MiniBank.Models;
 using MiniBank.Services;
 
-
 Console.OutputEncoding = System.Text.Encoding.UTF8;
-
 
 var registry = new AccountRegistry();
 
@@ -22,6 +20,26 @@ while (true)
 
     var input = Console.ReadLine()?.Trim();
     if (input == "7") break;
+
+  
+    int ReadAccountId()
+    {
+        Console.Write("Account id: ");
+        var raw = Console.ReadLine();
+        if (!int.TryParse(raw, out var id) || id <= 0)
+            throw new ArgumentException("Account id must be a positive integer.");
+        return id;
+    }
+
+    decimal ReadPositiveAmount(string prompt)
+    {
+        Console.Write(prompt);
+        var raw = Console.ReadLine();
+        if (!decimal.TryParse(raw, out var amount) || amount <= 0)
+            throw new ArgumentException("Amount must be a positive number.");
+        return decimal.Round(amount, 2);
+    }
+  
 
     switch (input)
     {
@@ -50,16 +68,6 @@ while (true)
                 {
                     Console.WriteLine("Owner is required.");
                     break;
-                }
-
-                
-                decimal ReadPositiveAmount(string prompt)
-                {
-                    Console.Write(prompt);
-                    var raw = Console.ReadLine();
-                    if (!decimal.TryParse(raw, out var amount) || amount <= 0)
-                        throw new ArgumentException("Amount must be a positive number.");
-                    return decimal.Round(amount, 2);
                 }
 
                 try
@@ -125,24 +133,50 @@ while (true)
             }
 
         case "3":
-            Console.WriteLine("TODO: Deposit flow.");
-            break;
+            {
+                // === DEPOSIT ===
+                try
+                {
+                    var id = ReadAccountId();
+
+                    var acc = registry.Find(id);
+                    if (acc is null)
+                    {
+                        Console.WriteLine("Account not found.");
+                        break;
+                    }
+
+                    var amount = ReadPositiveAmount("Amount to deposit: ");
+                    acc.Deposit(amount);
+
+                    Console.WriteLine($"Deposited {amount:C} into #{acc.Id} ({acc.GetType().Name}). New balance: {acc.Balance:C}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+                break;
+            }
 
         case "4":
-            Console.WriteLine("TODO: Withdraw flow ");
-            break;
+            {
+                Console.WriteLine("TODO: Withdraw flow ");
+                break;
+            }
 
         case "5":
-            Console.WriteLine("TODO: View statement ");
-            break;
+            {
+                Console.WriteLine("TODO: View statement ");
+                break;
+            }
 
         case "6":
             {
-                
+               
                 int count = 0;
                 foreach (var acc in registry.All)
                 {
-                    if (acc is MiniBank.Interfaces.IInterest ib)
+                    if (acc is IInterest ib)
                     {
                         ib.ApplyMonthlyInterest();
                         count++;
@@ -153,9 +187,12 @@ while (true)
             }
 
         default:
-            Console.WriteLine("Invalid option. Try again.");
-            break;
+            {
+                Console.WriteLine("Invalid option. Try again.");
+                break;
+            }
     }
 }
 
 Console.WriteLine("Goodbye!");
+
