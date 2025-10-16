@@ -12,7 +12,7 @@ public class SavingsAccount : BankAccount, IInterest
         MonthlyInterestRate = monthlyInterestRate;
     }
 
-    // Regula: NU permitem overdraft. Suma retrasă trebuie să fie ≤ sold.
+   
     public override bool Withdraw(decimal amount, out string? error)
     {
         error = null;
@@ -24,7 +24,7 @@ public class SavingsAccount : BankAccount, IInterest
         return true;
     }
 
-    // Dobânda lunară se aplică doar dacă există bani în cont.
+   
     public void ApplyMonthlyInterest()
     {
         if (Balance <= 0) return;
