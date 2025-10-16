@@ -192,7 +192,24 @@ while (true)
 
         case "5":
             {
-                Console.WriteLine("TODO: View statement ");
+                // === VIEW STATEMENT ===
+                try
+                {
+                    var id = ReadAccountId();
+
+                    var acc = registry.Find(id);
+                    if (acc is null)
+                    {
+                        Console.WriteLine("Account not found.");
+                        break;
+                    }
+
+                    acc.PrintStatement();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
                 break;
             }
 
