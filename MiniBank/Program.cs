@@ -21,7 +21,7 @@ while (true)
     var input = Console.ReadLine()?.Trim();
     if (input == "7") break;
 
-  
+
     int ReadAccountId()
     {
         Console.Write("Account id: ");
@@ -39,7 +39,8 @@ while (true)
             throw new ArgumentException("Amount must be a positive number.");
         return decimal.Round(amount, 2);
     }
-  
+
+
 
     switch (input)
     {
@@ -58,9 +59,7 @@ while (true)
 
         case "2":
             {
-                // === CREATE ACCOUNT ===
-                Console.Write("Type (Checking/Savings/Loan): ");
-                var type = (Console.ReadLine() ?? "").Trim().ToLowerInvariant();
+                // === CREATE ACCOUNT (cu selecție numerică + blocare duplicate per owner/tip) ===
 
                 Console.Write("Owner: ");
                 var owner = (Console.ReadLine() ?? "").Trim();
@@ -70,13 +69,27 @@ while (true)
                     break;
                 }
 
+                Console.WriteLine("Select account type:");
+                Console.WriteLine("  1) Checking");
+                Console.WriteLine("  2) Savings");
+                Console.WriteLine("  3) Loan");
+                Console.Write("Choice [1-3]: ");
+                var choice = (Console.ReadLine() ?? "").Trim();
+
+
                 try
                 {
-                    switch (type)
+                    switch (choice)
                     {
-                        case "checking":
-                        case "c":
+                        case "1": // Checking
                             {
+                                // ❗ blocare duplicate: același owner + tip
+                                if (registry.Exists<CheckingAccount>(owner))
+                                {
+                                    Console.WriteLine("Error: This owner already has a Checking account.");
+                                    break;
+                                }
+
                                 var opening = ReadPositiveAmount("Opening deposit: ");
                                 Console.Write("Overdraft limit (default 200): ");
                                 var odRaw = Console.ReadLine();
@@ -89,9 +102,15 @@ while (true)
                                 Console.WriteLine($"Created #{acc.Id} Checking for {owner} with BAL {acc.Balance:C} (OD {acc.OverdraftLimit:C}).");
                                 break;
                             }
-                        case "savings":
-                        case "s":
+
+                        case "2": // Savings
                             {
+                                if (registry.Exists<SavingsAccount>(owner))
+                                {
+                                    Console.WriteLine("Error: This owner already has a Savings account.");
+                                    break;
+                                }
+
                                 var opening = ReadPositiveAmount("Opening deposit: ");
                                 Console.Write("Monthly interest (default 0.01 = 1%): ");
                                 var rateRaw = Console.ReadLine();
@@ -104,9 +123,15 @@ while (true)
                                 Console.WriteLine($"Created #{acc.Id} Savings for {owner} with BAL {acc.Balance:C}.");
                                 break;
                             }
-                        case "loan":
-                        case "l":
+
+                        case "3": // Loan
                             {
+                                if (registry.Exists<LoanAccount>(owner))
+                                {
+                                    Console.WriteLine("Error: This owner already has a Loan account.");
+                                    break;
+                                }
+
                                 var principal = ReadPositiveAmount("Initial loan amount: ");
                                 Console.Write("Monthly interest (default 0.02 = 2%): ");
                                 var rateRaw = Console.ReadLine();
@@ -119,8 +144,9 @@ while (true)
                                 Console.WriteLine($"Created #{acc.Id} Loan for {owner} with BAL {acc.Balance:C}.");
                                 break;
                             }
+
                         default:
-                            Console.WriteLine("Unknown type. Please choose Checking / Savings / Loan.");
+                            Console.WriteLine("Unknown choice. Please select 1, 2, or 3.");
                             break;
                     }
                 }
@@ -128,9 +154,9 @@ while (true)
                 {
                     Console.WriteLine($"Error: {ex.Message}");
                 }
-
                 break;
             }
+
 
         case "3":
             {
