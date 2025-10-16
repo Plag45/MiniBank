@@ -59,7 +59,7 @@ while (true)
 
         case "2":
             {
-                // === CREATE ACCOUNT (cu selecție numerică + blocare duplicate per owner/tip) ===
+                // === CREATE ACCOUNT 
 
                 Console.Write("Owner: ");
                 var owner = (Console.ReadLine() ?? "").Trim();
@@ -83,7 +83,7 @@ while (true)
                     {
                         case "1": // Checking
                             {
-                                // ❗ blocare duplicate: același owner + tip
+                                
                                 if (registry.Exists<CheckingAccount>(owner))
                                 {
                                     Console.WriteLine("Error: This owner already has a Checking account.");
