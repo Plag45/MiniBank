@@ -40,8 +40,6 @@ while (true)
         return decimal.Round(amount, 2);
     }
 
-
-
     switch (input)
     {
         case "1":
@@ -81,7 +79,7 @@ while (true)
                 {
                     switch (choice)
                     {
-                        case "1": // Checking
+                        case "1": 
                             {
                                 
                                 if (registry.Exists<CheckingAccount>(owner))
@@ -103,7 +101,7 @@ while (true)
                                 break;
                             }
 
-                        case "2": // Savings
+                        case "2": 
                             {
                                 if (registry.Exists<SavingsAccount>(owner))
                                 {
@@ -124,7 +122,7 @@ while (true)
                                 break;
                             }
 
-                        case "3": // Loan
+                        case "3": 
                             {
                                 if (registry.Exists<LoanAccount>(owner))
                                 {
@@ -160,7 +158,6 @@ while (true)
 
         case "3":
             {
-                // === DEPOSIT ===
                 try
                 {
                     var id = ReadAccountId();
@@ -186,7 +183,6 @@ while (true)
 
         case "4":
             {
-                // === WITHDRAW ===
                 try
                 {
                     var id = ReadAccountId();
@@ -218,7 +214,6 @@ while (true)
 
         case "5":
             {
-                // === VIEW STATEMENT ===
                 try
                 {
                     var id = ReadAccountId();
