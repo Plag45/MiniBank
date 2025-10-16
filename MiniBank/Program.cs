@@ -160,7 +160,33 @@ while (true)
 
         case "4":
             {
-                Console.WriteLine("TODO: Withdraw flow ");
+                // === WITHDRAW ===
+                try
+                {
+                    var id = ReadAccountId();
+
+                    var acc = registry.Find(id);
+                    if (acc is null)
+                    {
+                        Console.WriteLine("Account not found.");
+                        break;
+                    }
+
+                    var amount = ReadPositiveAmount("Amount to withdraw: ");
+
+                    if (acc.Withdraw(amount, out var error))
+                    {
+                        Console.WriteLine($"Withdrew {amount:C} from #{acc.Id} ({acc.GetType().Name}). New balance: {acc.Balance:C}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Withdraw failed: {error}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
                 break;
             }
 
