@@ -18,11 +18,5 @@ public class AccountRegistry
         return account;
     }
 
-    public BankAccount? Find(int id) =>
-        _accounts.FirstOrDefault(a => a.Id == id);
-
-    public bool Exists<T>(string owner) where T : BankAccount =>
-        _accounts.Any(a =>
-            a is T &&
-            string.Equals(a.Owner, owner, StringComparison.OrdinalIgnoreCase));
+    public BankAccount? Find(int id) => _accounts.FirstOrDefault(a => a.Id == id);
 }
